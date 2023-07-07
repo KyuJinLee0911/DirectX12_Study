@@ -5,6 +5,15 @@ public:
 	void Init(const WindowInfo& info);
 	void Render();
 
+	
+
+public:
+	// 커맨드 큐에 요청사항 넣는 함수
+	void RenderBegin();
+
+	// GPU에 모든 일감을 넘겨 실질적으로 그리는 작업이 시작되는 함수
+	void RenderEnd();
+
 	void ResizeWindow(int32 width, int32 height);
 
 private:
