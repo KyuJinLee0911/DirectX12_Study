@@ -1,5 +1,9 @@
 #include "pch.h"
 #include "Engine.h"
+#include "Device.h"
+#include "CommandQueue.h"
+#include "SwapChain.h"
+#include "DescriptorHeap.h"
 
 void Engine::Init(const WindowInfo& info)
 {
@@ -15,12 +19,31 @@ void Engine::Init(const WindowInfo& info)
 	_swapChain = make_shared<SwapChain>();
 	_descHeap = make_shared<DescriptorHeap>();
 
-
-
+	_device->Init();
+	_cmdQueue->Init(_device->GetDevice(), _swapChain, _descHeap);
+	_swapChain->Init(info, _device->GetDXGI(), _cmdQueue->GetCmdQueue());
+	_descHeap->Init(_device->GetDevice(), _swapChain);
 }
 
 void Engine::Render()
 {
+	RenderBegin();
+
+	//TODO : 나머지 물체들 그려준다
+
+
+	RenderEnd();
+
+}
+
+void Engine::RenderBegin()
+{
+	_cmdQueue->RenderBegin(&_viewport, &_scissorRect);
+}
+
+void Engine::RenderEnd()
+{
+	_cmdQueue->RenderEnd();
 }
 
 void Engine::ResizeWindow(int32 width, int32 height)
@@ -32,3 +55,5 @@ void Engine::ResizeWindow(int32 width, int32 height)
 	::AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
 	::SetWindowPos(_window.hwnd, 0, 100, 100, width, height, 0);
 }
+
+
